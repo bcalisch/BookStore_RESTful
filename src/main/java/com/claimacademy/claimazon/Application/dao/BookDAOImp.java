@@ -130,7 +130,46 @@ public class BookDAOImp implements BookDAO {
 
     @Override
     public ArrayList<Book> findBooksById(String id) {
-        return null;
+        ArrayList<Book> books = new ArrayList<Book>();
+        String title;
+        try {
+            Class.forName(JDBC_DRIVER);
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            Statement stmt = conn.createStatement();
+            String sql="Select * from Book B WHERE B.ID = " + id;
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                Book book = new Book();
+
+                book.setTitle(rs.getString("Title"));
+                book.setDescription(rs.getString("Description"));
+                book.setId(rs.getInt("ID"));
+                book.setPrice(rs.getDouble("Price"));
+                book.setPublisher(rs.getString("Publisher"));
+                book.setYearPublished(rs.getString("Year_Published"));
+                book.setAuthors(getAuthors(book.getId()));
+                book.setCategories(getCategories(book.getId()));
+
+
+                books.add(book);
+
+//                int age = rs.getInt("age");
+
+                //Display values
+            }
+            // Clean-up environment
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return books;
+
     }
 
     @Override

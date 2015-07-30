@@ -1,8 +1,6 @@
 package com.claimacademy.claimazon.Application.model;
 
-/**
- * Created by benjamin on 7/29/15.
- */
+
 public class Greeting {
 
     private final long id;

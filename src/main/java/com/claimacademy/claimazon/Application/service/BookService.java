@@ -4,6 +4,7 @@ import com.claimacademy.claimazon.Application.dao.BookDAOImp;
 import com.claimacademy.claimazon.Application.model.Book;
 import com.claimacademy.claimazon.Application.model.Greeting;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,10 @@ public class BookService {
     }
     @RequestMapping("/books")
     public ArrayList<Book> getAllBooks(){
-        return new BookDAOImp().findAll();
+        return new BookDAOImp().findAllBooks();
+    }
+    @RequestMapping("/books/{id}")
+    public ArrayList<Book> getBooksByID(@PathVariable String id){
+        return new BookDAOImp().findBooksById(id);
     }
 }
