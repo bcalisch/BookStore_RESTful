@@ -1,4 +1,4 @@
-package com.claimacademy.claimazon.model;
+package com.claimacademy.claimazon.Application.model;
 
 /**
  * Created by benjamin on 7/29/15.

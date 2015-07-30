@@ -1,8 +1,8 @@
-package com.claimacademy.claimazon.dao;
+package com.claimacademy.claimazon.Application.dao;
 
-import com.claimacademy.claimazon.model.Author;
-import com.claimacademy.claimazon.model.Book;
-import com.claimacademy.claimazon.model.Category;
+import com.claimacademy.claimazon.Application.model.Author;
+import com.claimacademy.claimazon.Application.model.Book;
+import com.claimacademy.claimazon.Application.model.Category;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class BookDAOImp implements BookDAO {
     static final String USER = "root";
     static final String PASS = "";
     @Override
-    public ArrayList<Book> findAll() {
+    public ArrayList<Book> findAllBooks() {
         ArrayList<Book> books = new ArrayList<Book>();
         String title;
         try {
@@ -27,19 +27,19 @@ public class BookDAOImp implements BookDAO {
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Book thisBook = new Book();
+                Book book = new Book();
 
-                thisBook.setTitle(rs.getString("Title"));
-                thisBook.setDescription(rs.getString("Description"));
-                thisBook.setId(rs.getInt("ID"));
-                thisBook.setPrice(rs.getDouble("Price"));
-                thisBook.setPublisher(rs.getString("Publisher"));
-                thisBook.setYearPublished(rs.getNString("Year_Published"));
-                thisBook.setAuthors(getAuthors(thisBook.getId()));
-                thisBook.setCategories(getCategories(thisBook.getId()));
+                book.setTitle(rs.getString("Title"));
+                book.setDescription(rs.getString("Description"));
+                book.setId(rs.getInt("ID"));
+                book.setPrice(rs.getDouble("Price"));
+                book.setPublisher(rs.getString("Publisher"));
+                book.setYearPublished(rs.getString("Year_Published"));
+                book.setAuthors(getAuthors(book.getId()));
+                book.setCategories(getCategories(book.getId()));
 
 
-                books.add(new Book());
+                books.add(book);
 
 //                int age = rs.getInt("age");
 
@@ -100,10 +100,10 @@ public class BookDAOImp implements BookDAO {
             Class.forName(JDBC_DRIVER);
             Connection connAuthor = DriverManager.getConnection(DB_URL, USER, PASS);
             Statement stmtAuthor = connAuthor.createStatement();
-            String sqlAuthor="Select A.First_Name, A.LastName from Author A \n" +
-                    "join BookAuthors BA on A.ID = BA.Authors_ID\n" +
-                    "\n" +
-                    "where BA.Books_ID ="+id;
+            String sqlAuthor="Select A.First_Name, A.Last_Name from BookStore.Author A \n" +
+                    "join BookStore.BookAuthors BA on A.ID = BA.Authors_ID\n" +
+                    "                   \n" +
+                    "                    where BA.Books_ID = "+id;
             ResultSet rsAuthor = stmtAuthor.executeQuery(sqlAuthor);
 
             while(rsAuthor.next()){
@@ -113,10 +113,11 @@ public class BookDAOImp implements BookDAO {
 
                 authors.add(thisAuthor);
 
-                rsAuthor.close();
-                stmtAuthor.close();
-                connAuthor.close();
+
             }
+            rsAuthor.close();
+            stmtAuthor.close();
+            connAuthor.close();
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -128,7 +129,7 @@ public class BookDAOImp implements BookDAO {
     }
 
     @Override
-    public ArrayList<Book> findByTitle(String id) {
+    public ArrayList<Book> findBooksById(String id) {
         return null;
     }
 

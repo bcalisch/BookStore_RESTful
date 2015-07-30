@@ -1,10 +1,13 @@
-package com.claimacademy.claimazon.model;
+package com.claimacademy.claimazon.Application.model;
+
+import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 
 /**
  * Created by benjamin on 7/29/15.
  */
+@Controller
 public class Book {
     private int id;
     private String title;

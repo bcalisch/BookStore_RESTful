@@ -28,6 +28,7 @@
 
     <properties>
         <java.version>1.7</java.version>
+        <!--// update to 1.8 because 1.7 isn't supported after this month-->
     </properties>
 
 

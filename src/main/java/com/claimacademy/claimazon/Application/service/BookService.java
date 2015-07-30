@@ -1,15 +1,16 @@
-package com.claimacademy.claimazon.service;
+package com.claimacademy.claimazon.Application.service;
 
-import com.claimacademy.claimazon.dao.BookDAOImp;
-import com.claimacademy.claimazon.model.Book;
-import com.claimacademy.claimazon.model.Greeting;
+import com.claimacademy.claimazon.Application.dao.BookDAOImp;
+import com.claimacademy.claimazon.Application.model.Book;
+import com.claimacademy.claimazon.Application.model.Greeting;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-
+@Controller
 @RestController
 public class BookService {
     private static final String template = "Hello, %s!";
@@ -22,9 +23,6 @@ public class BookService {
     }
     @RequestMapping("/books")
     public ArrayList<Book> getAllBooks(){
-        System.out.println("Test");
-        ArrayList<Book> books = new BookDAOImp().findAll();
-        return books;
+        return new BookDAOImp().findAll();
     }
-
 }
