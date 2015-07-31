@@ -2,6 +2,7 @@ package com.claimacademy.claimazon.dao;
 
 import com.claimacademy.claimazon.model.Book;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -84,7 +85,18 @@ public class BookDAOImp implements BookDAO {
 
     @Override
     public String addBook(Book book) {
-
-        return null;
+        String result = "Working";
+        String sql = "Insert into BookStore.Book set(Title, Price, Year_Published, Publisher, Description)+" +
+                "values(\'"+book.getTitle()+"\',"+book.getPrice()+",\'"+book.getYearPublished()+"\',\'"+book.getPublisher()+"\',\'"+book.getDescription()+"\'";
+        try {
+            Connection conn = new SQLConnection().getConnection();
+            conn.createStatement().execute(sql);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            result="That didn't work";
+        }
+        return result;
     }
 }
