@@ -1,12 +1,10 @@
-package com.claimacademy.claimazon.Application.service;
+package com.claimacademy.claimazon.service;
 
-import com.claimacademy.claimazon.Application.dao.BookDAOImp;
-import com.claimacademy.claimazon.Application.model.Book;
-import com.claimacademy.claimazon.Application.model.Greeting;
+import com.claimacademy.claimazon.dao.BookDAOImp;
+import com.claimacademy.claimazon.model.Book;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -17,17 +15,21 @@ public class BookService {
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    @RequestMapping("/greeting")
-    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
-        return new Greeting(counter.incrementAndGet(),
-                String.format(template, name));
-    }
-    @RequestMapping("/books")
+    @RequestMapping("Get/books")
     public ArrayList<Book> getAllBooks(){
         return new BookDAOImp().findAllBooks();
     }
-    @RequestMapping("/books/{id}")
+    @RequestMapping("Get/books/id/{id}")
     public ArrayList<Book> getBooksByID(@PathVariable String id){
-        return new BookDAOImp().findBooksById(id);
+        return new BookDAOImp().findBookById(id);
     }
+    @RequestMapping("Get/books/category/{name}")
+    public ArrayList<Book> getBooksByCategory(@PathVariable String name){
+        return new BookDAOImp().findBooksByCategory(name);
+    }
+    @RequestMapping("Delete/books/id/{id}")
+    public String deleteBook(@PathVariable String id){
+        return new BookDAOImp().deleteBook(id);
+    }
+
 }

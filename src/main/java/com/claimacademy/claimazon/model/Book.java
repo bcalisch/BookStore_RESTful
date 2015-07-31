@@ -1,22 +1,34 @@
-package com.claimacademy.claimazon.Application.model;
+package com.claimacademy.claimazon.model;
 
-import org.springframework.stereotype.Controller;
-
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 
 /**
  * Created by benjamin on 7/29/15.
  */
-@Controller
 public class Book {
+    @NotNull
     private int id;
+    @NotNull
+    @Size(max = 250)
     private String title;
+    @NotNull
     private double price;
+    @NotNull
     private String description;
+    @NotNull
+    @Size(max = 250)
     private String publisher;
+    @NotNull
+    @Size(max =4)
     private String yearPublished;
+    @NotNull
     private ArrayList<Author> authors= new ArrayList<Author>();
+    @NotNull
     private ArrayList<Category> categories = new ArrayList<Category>();
+
+
 
     public int getId() {
         return id;

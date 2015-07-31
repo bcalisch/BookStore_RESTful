@@ -1,4 +1,4 @@
-package com.claimacademy.claimazon.Application;
+package com.claimacademy.claimazon;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
