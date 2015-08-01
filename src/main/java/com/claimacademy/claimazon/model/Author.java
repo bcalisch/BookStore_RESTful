@@ -5,6 +5,7 @@ package com.claimacademy.claimazon.model;
  */
 
 public class Author {
+    private int id;
     private String firstName;
     private String lastName;
 
@@ -25,4 +26,11 @@ public class Author {
         return lastName;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

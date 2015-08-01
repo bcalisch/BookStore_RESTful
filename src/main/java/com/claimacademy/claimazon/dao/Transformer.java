@@ -43,7 +43,7 @@ public class Transformer {
     private ArrayList<Category> getCategories(int id) {
         ArrayList<Category> categories = new ArrayList<Category>();
 
-        String sqlCategory="Select C.Name from BookCategory C\n" +
+        String sqlCategory="Select * from BookCategory C\n" +
                 "\n" +
                 "join Book B on B.ID = C.Book_ID\n" +
                 "\n" +
@@ -51,12 +51,7 @@ public class Transformer {
         try {
 
             ResultSet rsCategory = new SQLConnection().selectBuilder(sqlCategory);;
-            while(rsCategory.next()){
-                Category category = new Category();
-                category.setName(rsCategory.getString("Name"));
-
-                categories.add(category);
-            }
+            categories = transformRsToCategory(rsCategory);
             rsCategory.close();
         }  catch (SQLException e) {
             e.printStackTrace();
@@ -64,23 +59,32 @@ public class Transformer {
         return categories;
     }
 
+    public ArrayList<Category> transformRsToCategory(ResultSet rsCategory) {
+        ArrayList<Category> categories = new ArrayList<Category>() ;
+        try {
+            while(rsCategory.next()){
+                Category category = new Category();
+                category.setName(rsCategory.getString("Name"));
+
+                categories.add(category);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return categories;
+    }
+
     private ArrayList<Author> getAuthors(int id) {
         ArrayList<Author> authors = new ArrayList<Author>();
 
         try {
-            String sqlAuthor="Select A.First_Name, A.Last_Name from BookStore.Author A \n" +
+            String sqlAuthor="Select * from BookStore.Author A \n" +
                     "join BookStore.BookAuthors BA on A.ID = BA.Authors_ID\n" +
                     "                   \n" +
                     "                    where BA.Books_ID = "+id;
             ResultSet rsAuthor = new SQLConnection().selectBuilder(sqlAuthor);;
-
-            while(rsAuthor.next()){
-                Author author = new Author();
-                author.setFirstName(rsAuthor.getString("First_Name"));
-                author.setLastName(rsAuthor.getString("Last_Name"));
-
-                authors.add(author);
-            }
+            authors = transformRsToAuthor(rsAuthor);
             rsAuthor.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,4 +92,23 @@ public class Transformer {
 
         return authors;
     }
+
+    public ArrayList<Author> transformRsToAuthor(ResultSet rsAuthor) {
+        ArrayList<Author> authors = new ArrayList<Author>();
+        try {
+            while(rsAuthor.next()){
+                Author author = new Author();
+                author.setId(rsAuthor.getInt("ID"));
+                author.setFirstName(rsAuthor.getString("First_Name"));
+                author.setLastName(rsAuthor.getString("Last_Name"));
+
+                authors.add(author);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return authors;
+    }
+
 }

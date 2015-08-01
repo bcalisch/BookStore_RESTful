@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Book {
     @NotNull
-    private int id;
+    private Integer id;
     @NotNull
     @Size(max = 250)
     private String title;
