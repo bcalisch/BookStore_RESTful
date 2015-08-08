@@ -4,7 +4,6 @@ import com.claimacademy.claimazon.model.Author;
 import com.claimacademy.claimazon.model.Book;
 import com.claimacademy.claimazon.model.Category;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -99,29 +98,29 @@ public class BookDAOImp implements BookDAO {
         String sql = "Insert into BookStore.Book (ID ,Title, Price, Year_Published, Publisher, Description)" +
                 "values("+book.getId()+",\'" + book.getTitle() + "\',\n" + book.getPrice() + ",\n \'" + book.getYearPublished().substring(0, 4) + "\',\'" + book.getPublisher() + "\',\n\n\'" + book.getDescription() + "\')";
         try {
-            Connection conn = connection.conn;
-            conn.createStatement().execute(sql);
+            connection.getConnection().createStatement().execute(sql);
             for (Author author : book.getAuthors()) {
                 authorID = getAuthorID(author.getFirstName(), author.getLastName());
-
+                System.out.println("author.getFirstName() +\" \" + author.getLastName() = " + author.getFirstName() + " " + author.getLastName());
+                System.out.println(" book.getId() + \" \" + authorID = " + book.getId() + " " + authorID);
                 sqlBookAuthor = "Insert into BookStore.BookAuthors(Books_ID, Authors_ID) " +
                         "values(" + book.getId() + "," + authorID + ")";
-                    conn.createStatement().execute(sqlBookAuthor);
+                connection.getConnection().createStatement().execute(sqlBookAuthor);
             }
             for (Category category : book.getCategories()) {
                 categoryName = getCategoryName(category.getName());
                 if(categoryName==null){
                     sqlNewCategory = "Insert into BookStore.Category (Name)Values(\""+category.getName()+"\")";
-                    conn.createStatement().execute(sqlNewCategory);
+                    connection.getConnection().createStatement().execute(sqlNewCategory);
                 }
                 else{
                     category.setName(categoryName);
                 }
                 sqlCategory = "Insert into BookStore.BookCategory(Book_ID, Name) " +
                         "values(" + book.getId() + ",\'" + category.getName() + "\')";
-                conn.createStatement().execute(sqlCategory);
+                connection.getConnection().createStatement().execute(sqlCategory);
             }
-            conn.close();
+            connection.getConnection().close();
         } catch (SQLException e) {
             e.printStackTrace();
             result = "That didn't work";
@@ -144,8 +143,6 @@ public class BookDAOImp implements BookDAO {
     protected int getAuthorID(String firstName, String lastName) {
         ArrayList<Author> authors;
         int authorIDint=0;
-        String authorID=null;
-        Connection conn =  connection.conn;
         String sql = "Select * from BookStore.Author A where (A.First_Name = \"" + firstName + "\") AND " +
                 "(A.Last_Name = \"" + lastName + "\")";
         ResultSet rs = connection.selectBuilder(sql);
@@ -153,11 +150,11 @@ public class BookDAOImp implements BookDAO {
         if (!authors.isEmpty()) {
             authorIDint = (authors.get(0).getId());
         }
-        if (authorIDint == 0) {
+        else if (authorIDint == 0) {
             sql = "Insert into BookStore.Author(First_Name, Last_Name) values(\""
                     + firstName + "\",\"" + lastName + "\")";
             try {
-                conn.createStatement().execute(sql);
+                connection.getConnection().createStatement().execute(sql);
                 sql = "Select * from BookStore.Author A where (A.First_Name = \"" + firstName + "\") AND " +
                         "(A.Last_Name = \"" + lastName + "\")";
                 rs = connection.selectBuilder(sql);

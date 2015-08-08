@@ -102,7 +102,7 @@ public class Transformer {
         try {
             while(rsAuthor.next()){
                 Author author = new Author();
-//                author.setId(rsAuthor.getIIDs_ID"));
+                author.setId(rsAuthor.getInt("ID"));
                 author.setFirstName(rsAuthor.getString("First_Name"));
                 author.setLastName(rsAuthor.getString("Last_Name"));
 
