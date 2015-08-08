@@ -87,22 +87,20 @@ public class BookDAOImp implements BookDAO {
 
     @Override
     public String addBook(Book book) {
+        cleanBook(book);
         String result = "Working";
         String sqlBookAuthor;
-        String sqlNewAuthor, sqlNewCategory;
+        String sqlNewCategory;
         String sqlCategory;
         int authorID;
         String categoryName;
-        int authorIDint;
 
-        String sql = "Insert into BookStore.Book (ID ,Title, Price, Year_Published, Publisher, Description)" +
-                "values("+book.getId()+",\'" + book.getTitle() + "\',\n" + book.getPrice() + ",\n \'" + book.getYearPublished().substring(0, 4) + "\',\'" + book.getPublisher() + "\',\n\n\'" + book.getDescription() + "\')";
+        String sql = "Insert into BookStore.Book (ID ,Title, Price, Year_Published, Publisher, Description, ImageName)" +
+                "values("+book.getId()+",\'" + book.getTitle() + "\',\n" + book.getPrice() + ",\n \'" + book.getYearPublished().substring(0, 4) + "\',\'" + book.getPublisher() + "\',\n\n\'" + book.getDescription() + "\',\'"+book.getImageName()+"\')";
         try {
             connection.getConnection().createStatement().execute(sql);
             for (Author author : book.getAuthors()) {
                 authorID = getAuthorID(author.getFirstName(), author.getLastName());
-                System.out.println("author.getFirstName() +\" \" + author.getLastName() = " + author.getFirstName() + " " + author.getLastName());
-                System.out.println(" book.getId() + \" \" + authorID = " + book.getId() + " " + authorID);
                 sqlBookAuthor = "Insert into BookStore.BookAuthors(Books_ID, Authors_ID) " +
                         "values(" + book.getId() + "," + authorID + ")";
                 connection.getConnection().createStatement().execute(sqlBookAuthor);
@@ -126,6 +124,10 @@ public class BookDAOImp implements BookDAO {
             result = "That didn't work";
         }
         return result;
+    }
+
+    private void cleanBook(Book book) {
+        book.setDescription(book.getDescription().replaceAll("\'", " \\'"));
     }
 
     protected String getCategoryName(String name) {
