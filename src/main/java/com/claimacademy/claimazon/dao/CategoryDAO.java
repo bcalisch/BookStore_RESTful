@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 
 public interface CategoryDAO {
-    public ArrayList<Category> findAllCategories(String name);
+     ArrayList<Category> findAllCategories();
+     ArrayList<Category> categoryCount();
 
 }

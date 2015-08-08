@@ -11,10 +11,33 @@ import java.sql.SQLException;
 public class SQLConnection {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/BookStore";
+    protected Connection conn;
 
-    //  Database credentials
     static final String USER = "root";
     static final String PASS = "";
+    public SQLConnection(){
+        try {
+
+            if (conn == null){
+                if (DriverManager.getConnection(DB_URL, USER, PASS).isClosed()){
+                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                }
+                else{
+                    DriverManager.getConnection(DB_URL, USER, PASS).close();
+                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                }
+            }
+             else{
+                conn.close();
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     public ResultSet selectBuilder(String sqlStatement) {
         ResultSet rs = null;
@@ -26,17 +49,29 @@ public class SQLConnection {
         return rs;
     }
 
-    public Connection getConnection()  {
+    public Connection getConnection() {
         try {
-            Class.forName(JDBC_DRIVER);
-            return DriverManager.getConnection(DB_URL, USER, PASS);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+            if(conn == null) {
+                if (conn.isClosed()) {
+                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                } else {
+                    conn.close();
+                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                }
+            }
+            else{
+                conn.close();
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            }
+
+
+        }  catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return conn;
     }
+
+
 }
 
 

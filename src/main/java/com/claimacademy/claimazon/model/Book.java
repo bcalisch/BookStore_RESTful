@@ -1,42 +1,38 @@
 package com.claimacademy.claimazon.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 
 /**
  * Created by benjamin on 7/29/15.
  */
 public class Book {
-    @NotNull
     private Integer id;
-    @NotNull
-    @Size(max = 250)
     private String title;
-    @NotNull
     private double price;
-    @NotNull
     private String description;
-    @NotNull
-    @Size(max = 250)
     private String publisher;
-    @NotNull
-    @Size(max =4)
     private String yearPublished;
-    @NotNull
+    private String imageName;
     private ArrayList<Author> authors= new ArrayList<Author>();
-    @NotNull
     private ArrayList<Category> categories = new ArrayList<Category>();
 
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getTitle() {
         return title;

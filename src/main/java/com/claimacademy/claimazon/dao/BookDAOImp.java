@@ -12,15 +12,18 @@ import java.util.ArrayList;
 
 public class BookDAOImp implements BookDAO {
 
+    private SQLConnection connection = new SQLConnection();
+
 
     @Override
     public ArrayList<Book> findAllBooks() {
         ArrayList<Book> books = new ArrayList<Book>();
         String sql = "Select * from Book B;";
-        ResultSet rs = new SQLConnection().selectBuilder(sql);
+        ResultSet rs = connection.selectBuilder(sql);
         try {
             books = new Transformer().transformResultSetToBooks(rs);
             rs.close();
+            connection.conn.close();
         } catch (SQLException e1) {
             e1.printStackTrace();
         }
@@ -33,8 +36,7 @@ public class BookDAOImp implements BookDAO {
         ArrayList<Book> books = new ArrayList<Book>();
         try {
             String sqlID = "Select * from Book B WHERE B.ID = " + id;
-            ResultSet rs = new SQLConnection().selectBuilder(sqlID);
-            ;
+            ResultSet rs = connection.selectBuilder(sqlID);
             books = new Transformer().transformResultSetToBooks(rs);
             rs.close();
         } catch (SQLException e) {
@@ -50,7 +52,7 @@ public class BookDAOImp implements BookDAO {
             String sql = "Select * from BookStore.Book b\n" +
                     "join BookStore.BookCategory bc on bc.Book_ID = b.ID\n" +
                     "where bc.name = \'" + name + "\'";
-            ResultSet rs = new SQLConnection().selectBuilder(sql);
+            ResultSet rs = connection.selectBuilder(sql);
             books = new Transformer().transformResultSetToBooks(rs);
             rs.close();
 
@@ -72,9 +74,10 @@ public class BookDAOImp implements BookDAO {
         String sql2 = "Delete from BookStore.BookCategory where BookStore.Bookcategory.Book_ID = " + id + "\n";
         String sql3 = "Delete from BookStore.Book where BookStore.Book.ID =" + id;
         try {
-            new SQLConnection().getConnection().createStatement().execute(sql1);
-            new SQLConnection().getConnection().createStatement().execute(sql2);
-            new SQLConnection().getConnection().createStatement().execute(sql3);
+            connection.getConnection();
+            connection.conn.createStatement().execute(sql1);
+            connection.conn.createStatement().execute(sql2);
+            connection.conn.createStatement().execute(sql3);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,13 +95,11 @@ public class BookDAOImp implements BookDAO {
         int authorID;
         String categoryName;
         int authorIDint;
-//        System.out.println("book.getYearPublished() = " + book.getYearPublished().substring(0,4));
-        /*Insert into BookStore.Book (Title, Price, Year_Published, Publisher, Description)
-                values('Java For Beginners',22.32,'1999','Johan Bach',"Cool book about Java, yall");*/
+
         String sql = "Insert into BookStore.Book (ID ,Title, Price, Year_Published, Publisher, Description)" +
                 "values("+book.getId()+",\'" + book.getTitle() + "\',\n" + book.getPrice() + ",\n \'" + book.getYearPublished().substring(0, 4) + "\',\'" + book.getPublisher() + "\',\n\n\'" + book.getDescription() + "\')";
         try {
-            Connection conn = new SQLConnection().getConnection();
+            Connection conn = connection.conn;
             conn.createStatement().execute(sql);
             for (Author author : book.getAuthors()) {
                 authorID = getAuthorID(author.getFirstName(), author.getLastName());
@@ -132,7 +133,7 @@ public class BookDAOImp implements BookDAO {
         ArrayList<Category> categories;
         String categoryName = null;
         String sql = "Select * from BookStore.Category C where (C.Name = \"" + name + "\")";
-        ResultSet rs = new SQLConnection().selectBuilder(sql);
+        ResultSet rs = connection.selectBuilder(sql);
         categories = new Transformer().transformRsToCategory(rs);
         if (!categories.isEmpty()) {
             categoryName = categories.get(0).getName();
@@ -144,10 +145,10 @@ public class BookDAOImp implements BookDAO {
         ArrayList<Author> authors;
         int authorIDint=0;
         String authorID=null;
-        Connection conn =  new SQLConnection().getConnection();
+        Connection conn =  connection.conn;
         String sql = "Select * from BookStore.Author A where (A.First_Name = \"" + firstName + "\") AND " +
                 "(A.Last_Name = \"" + lastName + "\")";
-        ResultSet rs = new SQLConnection().selectBuilder(sql);
+        ResultSet rs = connection.selectBuilder(sql);
         authors = new Transformer().transformRsToAuthor(rs);
         if (!authors.isEmpty()) {
             authorIDint = (authors.get(0).getId());
@@ -159,7 +160,7 @@ public class BookDAOImp implements BookDAO {
                 conn.createStatement().execute(sql);
                 sql = "Select * from BookStore.Author A where (A.First_Name = \"" + firstName + "\") AND " +
                         "(A.Last_Name = \"" + lastName + "\")";
-                rs = new SQLConnection().selectBuilder(sql);
+                rs = connection.selectBuilder(sql);
                 authors =new Transformer().transformRsToAuthor(rs);
                 authorIDint = authors.get(0).getId();
 

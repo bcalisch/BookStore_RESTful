@@ -1,17 +1,19 @@
 package com.claimacademy.claimazon.service;
 
-import com.claimacademy.claimazon.dao.BookDAO;
-import com.claimacademy.claimazon.dao.BookDAOImp;
-import com.claimacademy.claimazon.model.Book;
+import com.claimacademy.claimazon.dao.CategoryDAO;
+import com.claimacademy.claimazon.dao.CategoryDAOImp;
+import com.claimacademy.claimazon.model.Category;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+
 @Controller
 @RestController
-public class BookService {
-
-    private BookDAO bookDAO = new BookDAOImp();
+public class CategoryService {
+    /*   private BookDAO bookDAO = new BookDAOImp();
 
     @RequestMapping(value="books",method=RequestMethod.GET)
     public ArrayList<Book> getAllBooks(){
@@ -35,6 +37,10 @@ public class BookService {
 
         bookDAO.addBook(book);
         return book;
+    }*/
+    private CategoryDAO categoryDAO = new CategoryDAOImp();
+    @RequestMapping(value="categories",method= RequestMethod.GET)
+    public ArrayList<Category> cate(){
+        return categoryDAO.categoryCount();
     }
-
 }

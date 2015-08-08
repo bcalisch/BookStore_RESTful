@@ -12,6 +12,12 @@ import java.util.ArrayList;
  * Created by benjamin on 7/31/15.
  */
 public class Transformer {
+    public SQLConnection connection;
+    public Transformer(){
+        if (connection == null){
+            connection  = new SQLConnection();
+        }
+    }
     public ArrayList<Book> transformResultSetToBooks(ResultSet rs){
         ArrayList<Book> books = new ArrayList<Book>();
         try {
@@ -24,16 +30,13 @@ public class Transformer {
                 book.setPrice(rs.getDouble("Price"));
                 book.setPublisher(rs.getString("Publisher"));
                 book.setYearPublished(rs.getString("Year_Published"));
+                book.setImageName(rs.getString("ImageName"));
                 book.setAuthors(getAuthors(book.getId()));
                 book.setCategories(getCategories(book.getId()));
-
-
                 books.add(book);
 
-    //                int age = rs.getInt("age");
-
-                //Display values
             }
+            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -50,7 +53,7 @@ public class Transformer {
                 "where B.ID ="+id;
         try {
 
-            ResultSet rsCategory = new SQLConnection().selectBuilder(sqlCategory);;
+            ResultSet rsCategory = connection.selectBuilder(sqlCategory);;
             categories = transformRsToCategory(rsCategory);
             rsCategory.close();
         }  catch (SQLException e) {
@@ -68,6 +71,7 @@ public class Transformer {
 
                 categories.add(category);
             }
+            rsCategory.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,7 +87,7 @@ public class Transformer {
                     "join BookStore.BookAuthors BA on A.ID = BA.Authors_ID\n" +
                     "                   \n" +
                     "                    where BA.Books_ID = "+id;
-            ResultSet rsAuthor = new SQLConnection().selectBuilder(sqlAuthor);;
+            ResultSet rsAuthor = connection.selectBuilder(sqlAuthor);
             authors = transformRsToAuthor(rsAuthor);
             rsAuthor.close();
         } catch (SQLException e) {
@@ -98,17 +102,34 @@ public class Transformer {
         try {
             while(rsAuthor.next()){
                 Author author = new Author();
-                author.setId(rsAuthor.getInt("ID"));
+//                author.setId(rsAuthor.getIIDs_ID"));
                 author.setFirstName(rsAuthor.getString("First_Name"));
                 author.setLastName(rsAuthor.getString("Last_Name"));
 
                 authors.add(author);
 
             }
+            rsAuthor.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return authors;
     }
 
+    public ArrayList<Category> transformResultSetToCategoryCount(ResultSet rs) {
+        ArrayList<Category> categories = new ArrayList<>();
+        try {
+            while(rs.next()){
+                Category category = new Category();
+                category.setCount(rs.getInt("Count"));
+                category.setName(rs.getString("Name"));
+
+                categories.add(category);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return categories;
+    }
 }
